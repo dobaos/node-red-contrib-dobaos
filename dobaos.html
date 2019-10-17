@@ -1,0 +1,72 @@
+// dobaos value that appears on bus
+<script type="text/javascript">
+  /*global RED*/
+  RED.nodes.registerType('dobaos-value', {
+    category: 'dobaos',
+    inputs: 0,
+    outputs: 1,
+    color: "#ffffff",
+    icon: "redis.png",
+    paletteLabel: "dobaos value",
+    defaults: {
+      datapoint: {
+        value: "1",
+        required: true
+      },
+    },
+    label: function () {
+      return this.name || this.topic || "dobaos value";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="dobaos-value">
+    <div class="form-row">
+        <label for="node-input-datapoint"><i class="icon-tasks"></i>Datapoint ID</label>
+        <input type="text" id="node-input-datapoint" placeholder="id">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="dobaos-value">
+  <p>Datapoint value</p>
+    <p>on certain datapoint value</p>
+</script>
+
+// now dobaos command
+<script type="text/javascript">
+    /*global RED*/
+    RED.nodes.registerType('dobaos-method', {
+        category: 'dobaos',
+        inputs: 1,
+        outputs: 1,
+        color: "#ffffff",
+        align: "right",
+        paletteLabel: "dobaos method",
+        defaults: {
+            method: {
+                value: "get value"
+            }
+        },
+        label: function () {
+            return this.name || this.topic || "dobaos-method";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="dobaos-method">
+    <div class="form-row">
+        <label for="node-input-method"><i class="fa fa-unlock"></i> Method</label>
+        <select id="node-input-method">
+            <option value="get description" selected>get description</option>
+            <option value="get value">get value</option>
+            <option value="read value">read value</option>
+            <option value="set value">set value</option>
+            <option value="get server items">get server items</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="dobaos-method">
+    <p>Redis out</p>
+    <p>Send request to dobaos</p>
+</script>

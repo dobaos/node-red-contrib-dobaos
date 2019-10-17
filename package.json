@@ -1,0 +1,32 @@
+{
+  "name": "node-red-contrib-dobaos",
+  "version": "0.4.2",
+  "description": "node-red support for dobaos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dobaos/node-red-contrib-dobaos.git"
+  },
+  "node-red": {
+    "nodes": {
+      "dobaos": "dobaos.js"
+    }
+  },
+  "keywords": [
+    "knx",
+    "dobaos",
+    "baos"
+  ],
+  "author": "Vladimir Shabunin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dobaos/node-red-contrib-dobaos/issues"
+  },
+  "homepage": "https://github.com/dobaos/node-red-contrib-dobaos#readme",
+  "dependencies": {
+    "dobaos.js": "^0.4.21"
+  }
+}
