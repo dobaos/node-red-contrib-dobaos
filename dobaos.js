@@ -57,16 +57,32 @@ module.exports = function(RED) {
   RED.nodes.registerType("dobaos-method", DobaosMethod);
 
   function DobaosValue(config) {
-    let datapoint = parseInt(config.datapoint, 10);
+    let datapoint = JSON.parse(config.datapoint);
     const processBaosValue = payload => {
       if (Array.isArray(payload)) {
         return payload.forEach(processBaosValue);
       }
 
       let {id, value} = payload;
-      if (id === datapoint) {
+
+      // should value be triggered in node-red?
+      let trigger;
+      if (Array.isArray(datapoint)) {
+        // if id is presented in given array
+        trigger = datapoint.includes(id);
+      } else if (typeof datapoint === "number") {
+        // if only one number was given
+        if (datapoint === 0) {
+          // if 0 id was provided, react on any dpt
+          trigger = true;
+        } else {
+          trigger = id === datapoint;
+        }
+      }
+      if (trigger) {
         let msg = {};
-        msg.payload = value;
+        msg.method = "datapoint value";
+        msg.payload = payload;
         node.send(msg);
       }
     };
