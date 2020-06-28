@@ -26,6 +26,13 @@ module.exports = function(RED) {
             result = e.message;
           }
           break;
+        case "get stored":
+          try {
+            result = await dobaos.getStored(payload);
+          } catch(e) {
+            result = e.message;
+          }
+          break;
         case "read value":
           try {
             result = await dobaos.readValue(payload);

@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/dobaos/node-red-contrib-dobaos#readme",
   "dependencies": {
-    "dobaos.js": "^0.4.21"
+    "dobaos.js": "^0.4.23"
   }
 }
