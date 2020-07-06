@@ -47,6 +47,13 @@ module.exports = function(RED) {
             result = e.message;
           }
           break;
+        case "put value":
+          try {
+            result = await dobaos.putValue(payload);
+          } catch(e) {
+            result = e.message;
+          }
+          break;
         case "get server items":
           try {
             result = await dobaos.getServerItems(payload);
