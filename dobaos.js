@@ -4,14 +4,29 @@ module.exports = function(RED) {
   dobaos.init();
 
   function DobaosMethod(config) {
-    let method = config.method;
-    RED.nodes.createNode(this,config);
+    RED.nodes.createNode(this, config);
+    let cMethod = config.method;
+    let cPayload = config.payload;
+    let cPayloadType = config.payloadType;
+    let flow = this.context().flow;
+    let global = this.context().global;
     var node = this;
+    node.on('close', async function() {
+      // do something
+    });
     node.on('input', async function(msg) {
       let response = {};
-      let payload = msg.payload;
       let result = {};
-      switch (method) {
+      let payload;
+      if (cPayloadType === "msg")
+        payload = msg[cPayload];
+      else if (cPayloadType === "flow")
+        payload = flow[cPayload];
+      else if (cPayloadType === "global")
+        payload = global[cPayload];
+      else if (cPayloadType === "json")
+        payload = JSON.parse(cPayload);
+      switch (cMethod) {
         case "get description":
           try {
             result = await dobaos.getDescription(payload);
@@ -71,6 +86,7 @@ module.exports = function(RED) {
   RED.nodes.registerType("dobaos-method", DobaosMethod);
 
   function DobaosValue(config) {
+    var node = this;
     let datapoint = JSON.parse(config.datapoint);
     const processBaosValue = payload => {
       if (Array.isArray(payload)) {
@@ -78,12 +94,16 @@ module.exports = function(RED) {
       }
 
       let {id, value} = payload;
+      let name = "";
+      if (payload.hasOwnProperty("name")) {
+        name = payload.name;
+      }
 
       // should value be triggered in node-red?
       let trigger;
       if (Array.isArray(datapoint)) {
         // if id is presented in given array
-        trigger = datapoint.includes(id);
+        trigger = datapoint.includes(id) || datapoint.includes(name);
       } else if (typeof datapoint === "number") {
         // if only one number was given
         if (datapoint === 0) {
@@ -91,6 +111,13 @@ module.exports = function(RED) {
           trigger = true;
         } else {
           trigger = id === datapoint;
+        }
+      } else if (typeof datapoint === "string") {
+        // if only one number was given
+        if (datapoint === "") {
+          trigger = true;
+        } else {
+          trigger = name === datapoint;
         }
       }
       if (trigger) {
@@ -101,10 +128,11 @@ module.exports = function(RED) {
       }
     };
     dobaos.on("datapoint value", processBaosValue);
-
     RED.nodes.createNode(this,config);
-    var node = this;
+    node.on('close', async function() {
+      // do something
+      dobaos.removeListener("datapoint value", processBaosValue);
+    });
   }
   RED.nodes.registerType("dobaos-value", DobaosValue);
 }
-

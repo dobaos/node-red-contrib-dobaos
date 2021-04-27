@@ -5,12 +5,16 @@
     category: 'dobaos',
     inputs: 0,
     outputs: 1,
-    color: "#ffffff",
-    icon: "redis.png",
+    color: "#E9967A",
+    icon: "serial.svg",
     paletteLabel: "dobaos value",
     defaults: {
+      name: {
+        value: "dobaos value",
+        required: false
+      },
       datapoint: {
-        value: "1",
+        value: "0",
         required: true
       },
     },
@@ -22,8 +26,12 @@
 
 <script type="text/x-red" data-template-name="dobaos-value">
     <div class="form-row">
-        <label for="node-input-datapoint"><i class="icon-tasks"></i>Datapoint ID</label>
-        <input type="text" id="node-input-datapoint" placeholder="id">
+        <label for="node-input-name">Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-datapoint">Datapoint id/name</label>
+        <input type="text" id="node-input-datapoint" placeholder="0">
     </div>
 </script>
 
@@ -34,28 +42,52 @@
 
 // now dobaos command
 <script type="text/javascript">
-    /*global RED*/
-    RED.nodes.registerType('dobaos-method', {
-        category: 'dobaos',
-        inputs: 1,
-        outputs: 1,
-        color: "#ffffff",
-        align: "right",
-        paletteLabel: "dobaos method",
-        defaults: {
-            method: {
-                value: "get value"
-            }
-        },
-        label: function () {
-            return this.name || this.topic || "dobaos-method";
-        }
-    });
+  /*global RED*/
+  RED.nodes.registerType('dobaos-method', {
+    category: 'dobaos',
+    inputs: 1,
+    outputs: 1,
+    color: "#E9967A",
+    icon: "template.svg",
+    paletteLabel: "dobaos method",
+    defaults: {
+      name: {
+        value: "dobaos method",
+        required: false
+      },
+      method: {
+        value: "get value",
+        required: true
+      },
+      payload: {
+        value: "payload",
+        required: true
+      },
+      payloadType: {
+        value: "msg",
+        required: true
+      },
+    },
+    label: function () {
+      return this.name || this.topic || "dobaos method";
+    },
+    oneditprepare: function () {
+      $("#node-input-payload").typedInput({
+        type:"msg",
+        types:["msg", "flow","global", "json"],
+        typeField: "#node-input-payloadType"
+      });
+    }
+  });
 </script>
 
 <script type="text/x-red" data-template-name="dobaos-method">
     <div class="form-row">
-        <label for="node-input-method"><i class="fa fa-unlock"></i> Method</label>
+        <label for="node-input-name">Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-method">Method</label>
         <select id="node-input-method">
             <option value="get description" selected>get description</option>
             <option value="get value">get value</option>
@@ -65,6 +97,11 @@
             <option value="put value">put value</option>
             <option value="get server items">get server items</option>
         </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-payload">Payload</label>
+        <input type="text" id="node-input-payload" placeholder="payload">
+        <input type="hidden" id="node-input-payloadType">
     </div>
 </script>
 
